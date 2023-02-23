@@ -1,6 +1,9 @@
 # Marasmatic
-Connected drivel generating program
 
-# How
-1) 3 (NUMBER_OF_WORDS_IN_ONE_ELEMENT) words that follow each other in the selected file
-2) Repeat so that fourth word is going right after third _somewhere_ in the selected file
+Semiconnected drivel generating program using kind of [Markov chains](https://en.wikipedia.org/wiki/Markov_chain)
+
+## Usage
+
+Process file at path `kapital.txt` and generate 10 texts of 400 'words' each, treating 3 words as 'word':
+
+`.\main.exe kapital.txt 3 400 10`
