@@ -3,7 +3,6 @@ import pydantic
 import dataclasses
 import pydantic_core
 
-from .Tag import Tag
 from .Expression import Expression
 
 
@@ -14,7 +13,7 @@ class Pattern:
 	expression : Expression
 	value      : str
 
-	Tags       = dict[str, Tag]
+	Tags       = dict[str, str]
 	tags       : Tags = dataclasses.field(default_factory = dict)
 
 	@pydantic.field_validator('value', mode = 'after')
@@ -24,7 +23,6 @@ class Pattern:
 		return value
 
 	def tagged(self, tags: Tags):
-		assert self.value in tags['source'].value.lower()
 		return dataclasses.replace(
 			self,
 			tags = tags

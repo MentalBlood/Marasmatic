@@ -2,7 +2,6 @@ import re
 import pathlib
 import pydantic
 
-from .Tag        import Tag
 from .Text       import Text
 from .Pattern    import Pattern
 from .Expression import Expression
@@ -49,7 +48,7 @@ class Input:
 				for m in match:
 					if len(m):
 						yield self.classify(m).tagged({
-							'file': Tag(p.name),
-							'source': Tag(text)
+							'file': p.name,
+							'source': text
 						})
 						break

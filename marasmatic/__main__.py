@@ -43,8 +43,8 @@ def generate(input: tuple[str], length: int):
 
 @cli.command(name = 'bot')
 @click.option('--length',   default = 30, help = 'Length of text to generate',                required = True)
-@click.option('--input',                help = 'Input files pattern',                         required = True)
-@click.argument("input",                nargs = -1)
+@click.option('--input',                  help = 'Input files pattern',                       required = True)
+@click.argument("input",                  nargs = -1)
 @click.option('--token',                  help = 'Telegram bot token',                        required = True)
 @click.option('--interval', default = 30, help = 'Interval between posts, in seconds',        required = True)
 @click.option('--chat',                   help = 'Telegram chat id',                          required = True)
@@ -63,7 +63,7 @@ def bot(input: tuple[str], length: int, token: str, chat: str, interval: int, si
 
 	if site:
 		def decorator(e: Pattern):
-			return f"<a href='{site}{pathlib.Path(e.tags['file'].value).stem.replace('___', '/')}.html'>{e.value}</a>"
+			return f"<a href='{site}{pathlib.Path(e.tags['file']).stem.replace('___', '/')}.html'>{e.value}</a>"
 	else:
 		def decorator(e: Pattern):
 			return e.value
