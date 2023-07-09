@@ -15,6 +15,7 @@ class Bot:
 			data  = {
 				'chat_id'              : self.chat,
 				'text'                 : message,
-				'disable_notification' : True
+				'parse_mode'           : 'html',
+				'disable_web_page_preview': 'true'
 			}
 		)

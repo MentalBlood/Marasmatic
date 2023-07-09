@@ -18,15 +18,16 @@ def cli():
 
 @cli.command(name = 'print')
 @click.option('--length', default = 30, help = 'Length of text to generate', required = True)
-@click.option('--input',                help = 'Input file',                 required = True)
-def generate(input: pathlib.Path, length: int):
+@click.option('--input',                help = 'Input files pattern',        required = True)
+@click.argument("input",                nargs = -1)
+def generate(input: tuple[str], length: int):
 	print(
 		' '.join(
 			e.value
 			for e in itertools.islice(
 				Base(
 					source = Input(
-						source      = input,
+						source      = set(map(pathlib.Path, input)),
 						expressions = {
 							Word,
 							PunctuationMark
@@ -41,15 +42,16 @@ def generate(input: pathlib.Path, length: int):
 
 @cli.command(name = 'bot')
 @click.option('--length',   default = 30, help = 'Length of text to generate',         required = True)
-@click.option('--input',                  help = 'Input file',                         required = True)
+@click.option('--input',                help = 'Input files pattern',                  required = True)
+@click.argument("input",                nargs = -1)
 @click.option('--token',                  help = 'Telegram bot token',                 required = True)
 @click.option('--interval', default = 30, help = 'Interval between posts, in seconds', required = True)
 @click.option('--chat',                   help = 'Telegram chat id',                   required = True)
-def bot(input: pathlib.Path, length: int, token: str, chat: str, interval: int):
+def bot(input: tuple[str], length: int, token: str, chat: str, interval: int):
 
 	base = Base(
 		source = Input(
-			source      = input,
+			source      = set(map(pathlib.Path, input)),
 			expressions = {
 				Word,
 				PunctuationMark
@@ -63,7 +65,7 @@ def bot(input: pathlib.Path, length: int, token: str, chat: str, interval: int):
 			chat  = chat
 		).send(
 			' '.join(
-				e.value
+				f"<a href='http://grob-hroniki.org/{pathlib.Path(e.tags['file'].value).stem.replace('___', '/')}.html'>{e.value}</a>"
 				for e in itertools.islice(
 					base.stream,
 					length

@@ -2,6 +2,8 @@ import re
 import pathlib
 import pydantic
 
+from .Tag        import Tag
+from .Text       import Text
 from .Pattern    import Pattern
 from .Expression import Expression
 
@@ -10,7 +12,7 @@ from .Expression import Expression
 @pydantic.dataclasses.dataclass(frozen = True, kw_only = True)
 class Input:
 
-	source      : pathlib.Path
+	source      : set[pathlib.Path]
 	expressions : set[Expression]
 
 	@property
@@ -34,11 +36,20 @@ class Input:
 
 	@property
 	def stream(self):
-		for match in re.findall(
-			self.expression.value,
-			self.source.read_text()
-		):
-			for m in match:
-				if len(m):
-					yield self.classify(m)
-					break
+		for p in self.source:
+			text = p.read_text(encoding = 'utf8')
+			for match in re.findall(
+				self.expression.value,
+				Text(
+					text
+				).cleaned(
+					leave = self.expression
+				)
+			):
+				for m in match:
+					if len(m):
+						yield self.classify(m).tagged({
+							'file': Tag(p.name),
+							'source': Tag(text)
+						})
+						break
