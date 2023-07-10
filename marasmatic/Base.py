@@ -38,9 +38,11 @@ class Base:
 
 	def next(self, current: Pattern | None) -> Pattern:
 
-		if current in self.next_:
-			if len(self.next_[current]):
+		try:
+			if current is not None:
 				return random.choice((*self.next_[current],))
+		except Exception:
+			pass
 
 		return random.choice((*self.next_.keys(),))
 
