@@ -37,13 +37,12 @@ class Base:
 			self.next_[current] = set()
 
 	def next(self, current: Pattern | None) -> Pattern:
-		try:
-			if current in self.next_:
+
+		if current in self.next_:
+			if len(self.next_[current]):
 				return random.choice((*self.next_[current],))
-			else:
-				return random.choice((*self.next_.keys(),))
-		except IndexError:
-			return self.next(None)
+
+		return random.choice((*self.next_.keys(),))
 
 	@property
 	def stream(self, current: Pattern | None = None):
