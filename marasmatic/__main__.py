@@ -75,7 +75,7 @@ def bot(input: tuple[str], length: int, token: str, chat: str, interval: int, si
 		).send(
 			' '.join(
 
-				     f"<a href='{e.tags['link']}.html'>{e.value}</a>"
+				     f"<a href='{e.tags['link']}'>{e.value}</a>"
 				if   e.tags['link']
 				else e.value
 
