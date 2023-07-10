@@ -1,10 +1,12 @@
 import re
 import pathlib
 import pydantic
+import dataclasses
 
 from .Text       import Text
 from .Pattern    import Pattern
 from .Expression import Expression
+from .pretags    import PreTags, Constants
 
 
 
@@ -13,6 +15,8 @@ class Input:
 
 	source      : set[pathlib.Path]
 	expressions : set[Expression]
+	pretags     : PreTags   = dataclasses.field(default_factory = dict)
+	constants   : Constants = dataclasses.field(default_factory = dict)
 
 	@property
 	def expression(self):
@@ -48,7 +52,7 @@ class Input:
 				for m in match:
 					if len(m):
 						yield self.classify(m).tagged({
-							'file': p.name,
-							'source': text
+							key: value(p, self.constants, self.pretags)
+							for key, value in self.pretags.items()
 						})
 						break

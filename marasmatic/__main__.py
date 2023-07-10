@@ -5,9 +5,9 @@ import itertools
 
 from .bot      import Bot, Repeater
 
+from .         import pretags
 from .Base     import Base
 from .Input    import Input
-from .Pattern  import Pattern
 from .patterns import PunctuationMark, Word
 
 
@@ -57,16 +57,16 @@ def bot(input: tuple[str], length: int, token: str, chat: str, interval: int, si
 			expressions = {
 				Word,
 				PunctuationMark
+			},
+			pretags = {
+				'file' : pretags.file,
+				'link' : pretags.link
+			},
+			constants = {
+				'site' : site
 			}
 		)
 	)
-
-	if site:
-		def decorator(e: Pattern):
-			return f"<a href='{site}{pathlib.Path(e.tags['file']).stem.replace('___', '/')}.html'>{e.value}</a>"
-	else:
-		def decorator(e: Pattern):
-			return e.value
 
 	Repeater(
 		f = lambda: Bot(
@@ -74,11 +74,16 @@ def bot(input: tuple[str], length: int, token: str, chat: str, interval: int, si
 			chat  = chat
 		).send(
 			' '.join(
-				decorator(e)
+
+				     f"<a href='{e.tags['link']}.html'>{e.value}</a>"
+				if   e.tags['link']
+				else e.value
+
 				for e in itertools.islice(
 					base.stream,
 					length
 				)
+
 			)
 		),
 		interval = datetime.timedelta(seconds = interval)

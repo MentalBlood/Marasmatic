@@ -13,7 +13,7 @@ class Pattern:
 	expression : Expression
 	value      : str
 
-	Tags       = dict[str, str]
+	Tags       = dict[str, str | None]
 	tags       : Tags = dataclasses.field(default_factory = dict)
 
 	@pydantic.field_validator('value', mode = 'after')
