@@ -8,7 +8,7 @@ from .bot      import Bot, Repeater
 from .         import pretags
 from .Base     import Base
 from .Input    import Input
-from .patterns import PunctuationMark, Word
+from .expressions import PunctuationMark, Word
 
 
 
