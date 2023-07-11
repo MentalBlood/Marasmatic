@@ -38,3 +38,12 @@ class Expression:
 			pattern = self.compiled,
 			string  = s
 		) != None
+
+	def filter(self, s: str):
+		for match in re.findall(
+			r'.*?(' + self.value + r').*?(?: |\n|$)',
+			s
+		):
+			for result in match:
+				if len(result):
+					yield result
