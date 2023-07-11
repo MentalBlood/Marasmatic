@@ -10,11 +10,7 @@ from .. import marasmatic
 def base():
 	return marasmatic.Base(
 		source = marasmatic.Input(
-			source      = set(pathlib.Path('trash/songs').glob('*.txt')),
-			expressions = {
-				marasmatic.expressions.Word,
-				marasmatic.expressions.PunctuationMark
-			}
+			source = set(pathlib.Path('trash/songs').glob('*.txt')),
 		)
 	)
 
