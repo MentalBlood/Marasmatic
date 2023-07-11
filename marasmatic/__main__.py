@@ -28,11 +28,11 @@ def generate(input: tuple[str], length: int):
 			for e in itertools.islice(
 				Base(
 					source = Input(
-						source      = set(map(pathlib.Path, input)),
-						expressions = {
+						source      = frozenset(map(pathlib.Path, input)),
+						expressions = frozenset((
 							Word,
 							PunctuationMark
-						}
+						))
 					)
 				).stream,
 				length
@@ -53,11 +53,11 @@ def bot(input: tuple[str], length: int, token: str, chat: str, interval: int, si
 
 	base = Base(
 		source = Input(
-			source      = set(map(pathlib.Path, input)),
-			expressions = {
+			source      = frozenset(map(pathlib.Path, input)),
+			expressions = frozenset((
 				Word,
 				PunctuationMark
-			},
+			)),
 			pretags = {
 				'file' : pretags.file,
 				'link' : pretags.link

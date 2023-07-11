@@ -1,6 +1,7 @@
 import re
 import pathlib
 import pydantic
+import functools
 import dataclasses
 
 from .Text       import Text
@@ -13,14 +14,14 @@ from .pretags    import PreTags, Constants
 @pydantic.dataclasses.dataclass(frozen = True, kw_only = True)
 class Input:
 
-	source      : set[pathlib.Path]
-	expressions : set[Expression]
+	source      : frozenset[pathlib.Path]
+	expressions : frozenset[Expression]
 	pretags     : PreTags   = dataclasses.field(default_factory = dict)
 	constants   : Constants = dataclasses.field(default_factory = dict)
 
-	@property
+	@functools.cached_property
 	def expression(self):
-		expressions = self.expressions.copy()
+		expressions = set(self.expressions)
 		result      = expressions.pop()
 		for e in expressions:
 			result |= e
