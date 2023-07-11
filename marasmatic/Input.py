@@ -28,25 +28,30 @@ class Input:
 
 			word = ''
 
-			for _c in p.read_text(encoding = 'utf8'):
+			with p.open('r', encoding = 'utf8') as f:
 
-				c = _c.lower()
+				while True:
 
-				if c in self.letters:
-					word += c
-					continue
+					if not (_c := f.read(1)):
+						break
 
-				if word:
-					yield Pattern(
-						value = word,
-						tags  = tags
-					)
-					word = ''
+					c = _c.lower()
 
-				if c in self.punctuation:
-					yield Pattern(
-						value = c,
-						tags  = tags
-					)
+					if c in self.letters:
+						word += c
+						continue
+
+					if word:
+						yield Pattern(
+							value = word,
+							tags  = tags
+						)
+						word = ''
+
+					if c in self.punctuation:
+						yield Pattern(
+							value = c,
+							tags  = tags
+						)
 
 			yield None
