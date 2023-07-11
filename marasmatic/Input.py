@@ -3,6 +3,7 @@ import pydantic
 import functools
 import dataclasses
 
+from .Text       import Text
 from .Pattern    import Pattern
 from .Expression import Expression
 from .pretags    import PreTags, Constants
@@ -38,12 +39,15 @@ class Input:
 		for p in self.source:
 
 			for s in self.expression.filter(
-				p.read_text(encoding = 'utf8').lower()
+				Text(
+					p.read_text(encoding = 'utf8')
+				).cleaned(
+					leave = self.expression
+				)
 			):
 				yield self.classify(s).tagged({
 					key: value(p, self.constants, self.pretags)
 					for key, value in self.pretags.items()
 				})
-				break
 
 			yield None

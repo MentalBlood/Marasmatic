@@ -27,6 +27,6 @@ class Expression:
 	def filter(self, s: str):
 		return (
 			match
-			for match in re.findall(r'.*?(' + self.value + r').*?(?: |\n|$)', s)
+			for match in re.findall(self.value, s)
 			if match
 		)
