@@ -1,7 +1,6 @@
 import re
 import typing
 import pydantic
-import functools
 
 
 
@@ -10,40 +9,24 @@ class Expression:
 
 	value : str
 
-	@functools.cached_property
-	def compiled(self):
-		return re.compile(self.value)
-
-	@property
-	def capturing(self):
-		if Expression(r'(?:[^\(\)]+$)|(?:\(\?.+)').match(self.value):
-			return Expression(f'({self.value})')
-		else:
-			return Expression(self.value)
-
-	def __or__(self, another: typing.Self):
-		return Expression(f'{self.capturing.value}|{another.capturing.value}')
-
-	def __add__(self, another: typing.Self):
-		return Expression(f'{self.value}{another.value}')
-
-	def __mul__(self, n: int):
-		result = self
-		for _ in range(n - 1):
-			result += self
-		return result
+	@classmethod
+	def joined(cls, expressions: typing.Iterable['Expression']):
+		return Expression(
+			'|'.join(
+				a.value
+				for a in expressions
+			)
+		)
 
 	def match(self, s: str):
 		return re.match(
-			pattern = self.compiled,
+			pattern = self.value,
 			string  = s
 		) != None
 
 	def filter(self, s: str):
-		for match in re.findall(
-			r'.*?(' + self.value + r').*?(?: |\n|$)',
-			s
-		):
-			for result in match:
-				if len(result):
-					yield result
+		return (
+			match
+			for match in re.findall(r'.*?(' + self.value + r').*?(?: |\n|$)', s)
+			if match
+		)
