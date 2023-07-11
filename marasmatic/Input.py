@@ -39,12 +39,13 @@ class Input:
 
 	@property
 	def stream(self):
+
 		for p in self.source:
-			text = p.read_text(encoding = 'utf8')
+
 			for match in re.findall(
 				self.expression.value,
 				Text(
-					text
+					p.read_text(encoding = 'utf8')
 				).cleaned(
 					leave = self.expression
 				)
@@ -56,3 +57,5 @@ class Input:
 							for key, value in self.pretags.items()
 						})
 						break
+
+			yield None

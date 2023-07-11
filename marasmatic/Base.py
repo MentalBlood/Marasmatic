@@ -18,10 +18,11 @@ class Base:
 		match self.source:
 			case Input():
 				for previous, current in itertools.pairwise(self.source.stream):
-					self.add(
-						previous = previous,
-						current  = current
-					)
+					if current is not None:
+						self.add(
+							previous = previous,
+							current  = current
+						)
 			case _:
 				pass
 

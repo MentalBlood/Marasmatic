@@ -9,7 +9,7 @@ if __name__ == '__main__':
 
 	setuptools.setup(
 		name                          = 'marasmatic',
-		version                       = '1.1.5',
+		version                       = '1.2.0',
 		description                   = 'Connected drivel generator',
 		long_description              = (pathlib.Path(__file__).parent / 'README.md').read_text(),
 		long_description_content_type = 'text/markdown',
