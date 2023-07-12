@@ -2,8 +2,9 @@ import pathlib
 import pydantic
 import dataclasses
 
-from .Pattern    import Pattern
-from .pretags    import PreTags, Constants
+from .Pattern     import Pattern
+from .Punctuation import Punctuation
+from .pretags     import PreTags, Constants
 
 
 
@@ -12,7 +13,7 @@ class Input:
 
 	source      : frozenset[pathlib.Path]
 	letters     : frozenset[str]          = frozenset('йцукенгшщзхфывапролджэячсмитьбюъё')
-	punctuation : frozenset[str]          = frozenset('.-—!?')
+	punctuation : Punctuation             = Punctuation(middle = frozenset('-—'), end = frozenset('.!?'))
 	pretags     : PreTags                 = dataclasses.field(default_factory = dict)
 	constants   : Constants               = dataclasses.field(default_factory = dict)
 
@@ -48,10 +49,12 @@ class Input:
 						)
 						word = ''
 
-					if c in self.punctuation:
+					if c in self.punctuation.middle:
 						yield Pattern(
 							value = c,
 							tags  = tags
 						)
+					elif c in self.punctuation.end:
+						yield None
 
 			yield None
