@@ -1,13 +1,14 @@
 import typing
+import pathlib
 import pydantic
 
 
 
-@pydantic.dataclasses.dataclass(frozen = True, kw_only = True)
-class Pattern:
+@pydantic.dataclasses.dataclass(frozen = True, kw_only = False)
+class Token:
 
 	value : str
-	tags  : dict[str, str | None]
+	path  : pathlib.Path
 
 	def __hash__(self):
 		return hash(self.value)

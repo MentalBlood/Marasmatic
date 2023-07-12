@@ -3,11 +3,10 @@ import pathlib
 import datetime
 import itertools
 
-from .bot      import Bot, Repeater
+from .bot   import Bot, Repeater
 
-from .Input    import Input
-from .bases    import Memory
-from .         import pretags
+from .Input import Input
+from .bases import Memory
 
 
 
@@ -46,14 +45,7 @@ def bot(input: tuple[pathlib.Path], length: int, token: str, chat: str, interval
 
 	base = Memory(
 		source = Input(
-			source  = frozenset(input),
-			pretags = {
-				'file' : pretags.file,
-				'link' : pretags.link
-			},
-			constants = {
-				'site' : site
-			}
+			source  = frozenset(input)
 		)
 	)
 
@@ -64,8 +56,8 @@ def bot(input: tuple[pathlib.Path], length: int, token: str, chat: str, interval
 		).send(
 			' '.join(
 
-				     f"<a href='{e.tags['link']}'>{e.value}</a>"
-				if   e.tags['link']
+				     f"<a href='{site}{e.path.stem.replace('___', '/')}.html'>{e.value}</a>"
+				if   site
 				else e.value
 
 				for e in itertools.islice(

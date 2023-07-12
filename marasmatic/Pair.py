@@ -1,11 +1,11 @@
 import pydantic
 
-from .Pattern import Pattern
+from .Token import Token
 
 
 
 @pydantic.dataclasses.dataclass(frozen = True, kw_only = False)
 class Pair:
 
-	previous : Pattern | None
-	current  : Pattern
+	previous : Token | None
+	current  : Token

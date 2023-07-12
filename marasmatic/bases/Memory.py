@@ -4,12 +4,12 @@ import pydantic
 
 from ..Pair    import Pair
 from ..Base    import Base
-from ..Pattern import Pattern
+from ..Token   import Token
 
 
 
 @pydantic.dataclasses.dataclass(frozen = True, kw_only = True)
-class Memory(Base, dict[Pattern, set[Pattern]]):
+class Memory(Base, dict[Token, set[Token]]):
 
 	def __ilshift__(self, p: Pair) -> typing.Self:
 
@@ -24,7 +24,7 @@ class Memory(Base, dict[Pattern, set[Pattern]]):
 
 		return self
 
-	def next(self, current: Pattern | None) -> Pattern:
+	def next(self, current: Token | None) -> Token:
 
 		try:
 			if current is not None:

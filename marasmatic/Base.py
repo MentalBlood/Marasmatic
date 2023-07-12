@@ -5,7 +5,7 @@ import itertools
 
 from .Pair    import Pair
 from .Input   import Input
-from .Pattern import Pattern
+from .Token   import Token
 
 
 
@@ -25,10 +25,10 @@ class Base(metaclass = abc.ABCMeta):
 		...
 
 	@abc.abstractmethod
-	def next(self, current: Pattern | None) -> Pattern:
+	def next(self, current: Token | None) -> Token:
 		...
 
 	@property
-	def stream(self, current: Pattern | None = None):
+	def stream(self, current: Token | None = None):
 		while True:
 			yield (current := self.next(current))

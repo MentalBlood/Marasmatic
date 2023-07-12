@@ -8,9 +8,9 @@ from .. import marasmatic
 
 @pytest.fixture
 def base():
-	return marasmatic.Base(
+	return marasmatic.bases.Memory(
 		source = marasmatic.Input(
-			source = set(pathlib.Path('trash/songs').glob('*.txt')),
+			source = frozenset(pathlib.Path('trash/songs').glob('*.txt')),
 		)
 	)
 

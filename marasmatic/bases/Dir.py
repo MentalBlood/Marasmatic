@@ -5,7 +5,7 @@ import pydantic
 
 from ..Pair    import Pair
 from ..Base    import Base
-from ..Pattern import Pattern
+from ..Token   import Token
 
 
 
@@ -21,15 +21,12 @@ class Dir(Base):
 		return (self / key).exists()
 
 	def __rshift__(self, key: str):
-		return Pattern(
+		return Token(
 			value = key,
-			tags  = {
-				k.stem: k.read_text()
-				for k in (self / key / 'tags').iterdir()
-			}
+			path  = pathlib.Path((self / key / 'tags' / 'path').with_suffix('.txt').read_text())
 		)
 
-	def __getitem__(self, key: Pattern):
+	def __getitem__(self, key: Token):
 		return (
 			p.stem
 			for p in (self / key.value / 'next').iterdir()
@@ -48,8 +45,7 @@ class Dir(Base):
 
 			tags.mkdir(parents = True)
 
-			for k, v in p.current.tags:
-				(tags / k).with_suffix('.txt').write_text(v)
+			(tags / 'path').with_suffix('.txt').write_text(str(p.current.path))
 
 		if p.previous:
 			if not (link := self / p.previous.value / "next" / p.current.value).exists():
@@ -57,7 +53,7 @@ class Dir(Base):
 
 		return self
 
-	def next(self, current: Pattern | None) -> Pattern:
+	def next(self, current: Token | None) -> Token:
 
 		try:
 			if current is not None:
