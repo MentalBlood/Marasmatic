@@ -5,9 +5,9 @@ import itertools
 
 from .bot      import Bot, Repeater
 
-from .         import pretags
 from .Input    import Input
-from .bases    import Memory, Dir
+from .bases    import Memory
+from .         import pretags
 
 
 
@@ -19,14 +19,14 @@ def cli():
 @cli.command(name = 'print')
 @click.option('--length', required = True, type = click.IntRange(min = 1), default = 30, show_default = True, help = 'Length of text to generate')
 @click.argument("input",  required = True, type = pathlib.Path,            nargs = -1)
-def generate(input: tuple[str], length: int):
+def generate(input: tuple[pathlib.Path], length: int):
 	print(
 		' '.join(
 			e.value
 			for e in itertools.islice(
 				Memory(
 					source = Input(
-						source = frozenset(map(pathlib.Path, input))
+						source = frozenset(input)
 					)
 				).stream,
 				length
@@ -36,18 +36,17 @@ def generate(input: tuple[str], length: int):
 
 
 @cli.command(name = 'bot')
-@click.option('--length',   default = 30, help = 'Length of text to generate',                required = True)
-@click.option('--input',                  help = 'Input files paths',                         required = True)
-@click.argument("input",                  nargs = -1)
-@click.option('--token',                  help = 'Telegram bot token',                        required = True)
-@click.option('--interval', default = 30, help = 'Interval between posts, in seconds',        required = True)
-@click.option('--chat',                   help = 'Telegram chat id',                          required = True)
-@click.option('--site',                   help = 'Site to join file paths to get links with', required = False)
-def bot(input: tuple[str], length: int, token: str, chat: str, interval: int, site: str):
+@click.option('--length',   required = True,  type = click.IntRange(min = 1), default = 30, show_default = True, help = 'Length of text to generate')
+@click.argument("input",    required = True,  type = pathlib.Path,            nargs = -1)
+@click.option('--token',    required = True,  type = str,                                                        help = 'Telegram bot token')
+@click.option('--interval', required = True,  type = click.IntRange(min = 1), default = 30, show_default = True, help = 'Interval between posts, in seconds')
+@click.option('--chat',     required = True,  type = str,                                                        help = 'Telegram chat id')
+@click.option('--site',     required = False, type = str,                                                        help = 'Site to join file paths to get links with')
+def bot(input: tuple[pathlib.Path], length: int, token: str, chat: str, interval: int, site: str):
 
 	base = Memory(
 		source = Input(
-			source  = frozenset(map(pathlib.Path, input)),
+			source  = frozenset(input),
 			pretags = {
 				'file' : pretags.file,
 				'link' : pretags.link
