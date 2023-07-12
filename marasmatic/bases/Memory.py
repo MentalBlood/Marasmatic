@@ -1,5 +1,6 @@
 import random
 import pydantic
+import dataclasses
 
 from ..Base    import Base
 from ..Pattern import Pattern
@@ -8,6 +9,8 @@ from ..Pattern import Pattern
 
 @pydantic.dataclasses.dataclass(frozen = True, kw_only = True)
 class Memory(Base):
+
+	next_  : dict[Pattern, set[Pattern]] = dataclasses.field(default_factory = dict)
 
 	def add(self, previous: Pattern | None, current: Pattern):
 

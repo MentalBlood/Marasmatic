@@ -1,7 +1,6 @@
 import abc
 import pydantic
 import itertools
-import dataclasses
 
 from .Input   import Input
 from .Pattern import Pattern
@@ -11,7 +10,6 @@ from .Pattern import Pattern
 @pydantic.dataclasses.dataclass(frozen = True, kw_only = True)
 class Base(metaclass = abc.ABCMeta):
 
-	next_  : dict[Pattern, set[Pattern]] = dataclasses.field(default_factory = dict)
 	source : Input | None
 
 	def __post_init__(self):
