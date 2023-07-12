@@ -1,4 +1,3 @@
-import chardet
 import pathlib
 import pydantic
 
