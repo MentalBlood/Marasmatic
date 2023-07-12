@@ -9,7 +9,7 @@ from .Token   import Token
 
 
 
-@pydantic.dataclasses.dataclass(frozen = True, kw_only = True)
+@pydantic.dataclasses.dataclass(frozen = True, kw_only = False)
 class Base(metaclass = abc.ABCMeta):
 
 	source : Input | None = None

@@ -8,7 +8,7 @@ from ..Token   import Token
 
 
 
-@pydantic.dataclasses.dataclass(frozen = True, kw_only = True)
+@pydantic.dataclasses.dataclass(frozen = True, kw_only = False)
 class Memory(Base, dict[Token, set[Token]]):
 
 	def __ilshift__(self, p: Pair) -> typing.Self:

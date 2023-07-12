@@ -1,3 +1,4 @@
+import chardet
 import pathlib
 import pydantic
 
@@ -10,6 +11,7 @@ from .Punctuation import Punctuation
 class Input:
 
 	source      : frozenset[pathlib.Path]
+	encoding    : str
 	letters     : frozenset[str]          = frozenset('йцукенгшщзхфывапролджэячсмитьбюъё')
 	punctuation : Punctuation             = Punctuation(middle = frozenset('-—'), end = frozenset('.!?'))
 
@@ -20,7 +22,7 @@ class Input:
 
 			word = ''
 
-			with p.open('r', encoding = 'utf8') as f:
+			with p.open('r', encoding = self.encoding) as f:
 
 				while _c := f.read(1):
 
