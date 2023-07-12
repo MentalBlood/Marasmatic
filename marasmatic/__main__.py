@@ -6,7 +6,7 @@ import itertools
 from .bot      import Bot, Repeater
 
 from .         import pretags
-from .Base     import Base
+from .bases    import Memory
 from .Input    import Input
 
 
@@ -25,7 +25,7 @@ def generate(input: tuple[str], length: int):
 		' '.join(
 			e.value
 			for e in itertools.islice(
-				Base(
+				Memory(
 					source = Input(
 						source = frozenset(map(pathlib.Path, input))
 					)
@@ -46,7 +46,7 @@ def generate(input: tuple[str], length: int):
 @click.option('--site',                   help = 'Site to join file paths to get links with', required = False)
 def bot(input: tuple[str], length: int, token: str, chat: str, interval: int, site: str):
 
-	base = Base(
+	base = Memory(
 		source = Input(
 			source  = frozenset(map(pathlib.Path, input)),
 			pretags = {

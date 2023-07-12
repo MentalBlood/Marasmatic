@@ -1,4 +1,4 @@
-import random
+import abc
 import pydantic
 import itertools
 import dataclasses
@@ -9,7 +9,7 @@ from .Pattern import Pattern
 
 
 @pydantic.dataclasses.dataclass(frozen = True, kw_only = True)
-class Base:
+class Base(metaclass = abc.ABCMeta):
 
 	next_  : dict[Pattern, set[Pattern]] = dataclasses.field(default_factory = dict)
 	source : Input | None
@@ -26,26 +26,13 @@ class Base:
 			case _:
 				pass
 
-	def add(self, previous: Pattern | None, current: Pattern):
+	@abc.abstractmethod
+	def add(self, previous: Pattern | None, current: Pattern) -> None:
+		...
 
-		if previous:
-			if previous in self.next_:
-				self.next_[previous].add(current)
-			else:
-				self.add(None, previous)
-
-		if current not in self.next_:
-			self.next_[current] = set()
-
+	@abc.abstractmethod
 	def next(self, current: Pattern | None) -> Pattern:
-
-		try:
-			if current is not None:
-				return random.choice((*self.next_[current],))
-		except Exception:
-			pass
-
-		return random.choice((*self.next_.keys(),))
+		...
 
 	@property
 	def stream(self, current: Pattern | None = None):
