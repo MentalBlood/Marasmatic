@@ -3,6 +3,7 @@ import typing
 import pathlib
 import pydantic
 
+from ..Pair    import Pair
 from ..Base    import Base
 from ..Pattern import Pattern
 
@@ -13,73 +14,57 @@ class Dir(Base):
 
 	root : pathlib.Path
 
-	def path(self, key: Pattern | str):
-		match key:
-			case Pattern():
-				return self.root / key.value
-			case str():
-				return self.root / key
+	def __truediv__(self, key: str):
+		return self.root / key
 
-	def __contains__(self, key: Pattern):
-		return self.path(key).exists()
+	def __contains__(self, key: str):
+		return (self / key).exists()
 
-	@typing.overload
-	def __getitem__(self, key: Pattern) -> typing.Generator[str, None, None]:
-		pass
+	def __rshift__(self, key: str):
+		return Pattern(
+			value = key,
+			tags  = {
+				k.stem: k.read_text()
+				for k in (self / key / 'tags').iterdir()
+			}
+		)
 
-	@typing.overload
-	def __getitem__(self, key: str) -> Pattern:
-		pass
+	def __getitem__(self, key: Pattern):
+		return (
+			p.stem
+			for p in (self / key.value / 'next').iterdir()
+		)
 
-	def __getitem__(self, key: Pattern | str):
-		match key:
-			case Pattern():
-				return (
-					p.stem
-					for p in (self.path(key) / 'next').iterdir()
-				)
-			case str():
-				return Pattern(
-					value = key,
-					tags  = {
-						k.stem: k.read_text()
-						for k in (self.path(key) / 'tags').iterdir()
-					}
-				)
-
+	@property
 	def keys(self):
 		return (
 			p.stem
 			for p in self.root.iterdir()
 		)
 
-	def append(self, e: Pattern):
+	def __ilshift__(self, p: Pair) -> typing.Self:
 
-		if (tags := (self.path(e) / 'tags')).exists():
-			return
+		if not (tags := (self / p.current.value / 'tags')).exists():
 
-		tags.mkdir(parents = True)
+			tags.mkdir(parents = True)
 
-		for k, v in e.tags:
-			(tags / k).with_suffix('.txt').write_text(v)
+			for k, v in p.current.tags:
+				(tags / k).with_suffix('.txt').write_text(v)
 
-	def add(self, previous: Pattern | None, current: Pattern):
-
-		if current not in self:
-			self.append(current)
-
-		if previous:
-			if previous in self:
-				self.path(current).symlink_to(self.path(previous) / 'next' / current.value)
+		if p.previous:
+			if p.previous.value in self:
+				(self / p.previous.value / 'next' / p.current.value).symlink_to(self / p.current.value)
 			else:
-				self.add(None, previous)
+				self <<= Pair(None, p.previous)
+
+		return self
 
 	def next(self, current: Pattern | None) -> Pattern:
 
 		try:
 			if current is not None:
-				return self[random.choice((*self[current],))]
+				return self >> random.choice((*self[current],))
 		except Exception:
 			pass
 
-		return self[random.choice((*self.keys(),))]
+		return self >> random.choice((*self.keys,))

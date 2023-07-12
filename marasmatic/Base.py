@@ -1,7 +1,9 @@
 import abc
+import typing
 import pydantic
 import itertools
 
+from .Pair    import Pair
 from .Input   import Input
 from .Pattern import Pattern
 
@@ -13,19 +15,13 @@ class Base(metaclass = abc.ABCMeta):
 	source : Input | None
 
 	def __post_init__(self):
-		match self.source:
-			case Input():
-				for previous, current in itertools.pairwise(self.source.stream):
-					if current is not None:
-						self.add(
-							previous = previous,
-							current  = current
-						)
-			case _:
-				pass
+		if self.source:
+			for previous, current in itertools.pairwise(self.source.stream):
+				if current is not None:
+					self <<= Pair(previous, current)
 
 	@abc.abstractmethod
-	def add(self, previous: Pattern | None, current: Pattern) -> None:
+	def __ilshift__(self, p: Pair) -> typing.Self:
 		...
 
 	@abc.abstractmethod
