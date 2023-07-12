@@ -61,6 +61,10 @@ class Input:
 							tags  = tags
 						)
 					elif c in self.punctuation.end:
+						yield Pattern(
+							value = c,
+							tags  = tags
+						)
 						yield None
 
 			yield None

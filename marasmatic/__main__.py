@@ -24,8 +24,10 @@ def generate(input: tuple[str], length: int):
 		' '.join(
 			e.value
 			for e in itertools.islice(
-				Dir(
-					root = pathlib.Path('trash') / 'dir'
+				Memory(
+					source = Input(
+						source = frozenset(map(pathlib.Path, input))
+					)
 				).stream,
 				length
 			)
