@@ -31,10 +31,16 @@ class Input:
 
 			with p.open('r', encoding = 'utf8') as f:
 
+				read = 0
+
 				while True:
+
+					if not (read % (1024 * 8)):
+						print(read // 1024 * 2)
 
 					if not (_c := f.read(1)):
 						break
+					read += 1
 
 					c = _c.lower()
 

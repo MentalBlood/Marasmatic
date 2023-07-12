@@ -44,7 +44,7 @@ class Dir(Base):
 
 	def __ilshift__(self, p: Pair) -> typing.Self:
 
-		if not (tags := (self / p.current.value / 'tags')).exists():
+		if not (tags := self / p.current.value / 'tags').exists():
 
 			tags.mkdir(parents = True)
 
@@ -52,10 +52,8 @@ class Dir(Base):
 				(tags / k).with_suffix('.txt').write_text(v)
 
 		if p.previous:
-			if p.previous.value in self:
-				(self / p.previous.value / 'next' / p.current.value).symlink_to(self / p.current.value)
-			else:
-				self <<= Pair(None, p.previous)
+			if not (link := self / p.previous.value / "next" / p.current.value).exists():
+				link.mkdir(parents = True)
 
 		return self
 

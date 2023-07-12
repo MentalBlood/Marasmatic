@@ -12,7 +12,7 @@ from .Pattern import Pattern
 @pydantic.dataclasses.dataclass(frozen = True, kw_only = True)
 class Base(metaclass = abc.ABCMeta):
 
-	source : Input | None
+	source : Input | None = None
 
 	def __post_init__(self):
 		if self.source:

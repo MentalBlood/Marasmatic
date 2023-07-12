@@ -6,8 +6,8 @@ import itertools
 from .bot      import Bot, Repeater
 
 from .         import pretags
-from .bases    import Memory
 from .Input    import Input
+from .bases    import Memory, Dir
 
 
 
@@ -17,18 +17,15 @@ def cli():
 
 
 @cli.command(name = 'print')
-@click.option('--length', default = 30, help = 'Length of text to generate', required = True)
-@click.option('--input',                help = 'Input files pattern',        required = True)
-@click.argument("input",                nargs = -1)
+@click.option('--length', required = True, type = click.IntRange(min = 1), default = 30, show_default = True, help = 'Length of text to generate')
+@click.argument("input",  required = True, type = pathlib.Path,            nargs = -1)
 def generate(input: tuple[str], length: int):
 	print(
 		' '.join(
 			e.value
 			for e in itertools.islice(
-				Memory(
-					source = Input(
-						source = frozenset(map(pathlib.Path, input))
-					)
+				Dir(
+					root = pathlib.Path('trash') / 'dir'
 				).stream,
 				length
 			)
@@ -38,7 +35,7 @@ def generate(input: tuple[str], length: int):
 
 @cli.command(name = 'bot')
 @click.option('--length',   default = 30, help = 'Length of text to generate',                required = True)
-@click.option('--input',                  help = 'Input files pattern',                       required = True)
+@click.option('--input',                  help = 'Input files paths',                         required = True)
 @click.argument("input",                  nargs = -1)
 @click.option('--token',                  help = 'Telegram bot token',                        required = True)
 @click.option('--interval', default = 30, help = 'Interval between posts, in seconds',        required = True)
