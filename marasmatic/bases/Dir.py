@@ -36,12 +36,12 @@ class Dir(Base):
 			case Pattern():
 				return (
 					p.stem
-					for p in self.path(key).iterdir()
+					for p in (self.path(key) / 'next').iterdir()
 				)
 			case str():
 				return Pattern(
 					value = key,
-					tags = {
+					tags  = {
 						k.stem: k.read_text()
 						for k in (self.path(key) / 'tags').iterdir()
 					}
@@ -70,7 +70,7 @@ class Dir(Base):
 
 		if previous:
 			if previous in self:
-				(self.path(previous) / current.value).link_to(self.path(current))
+				self.path(current).symlink_to(self.path(previous) / 'next' / current.value)
 			else:
 				self.add(None, previous)
 
