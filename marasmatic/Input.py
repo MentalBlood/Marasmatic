@@ -10,7 +10,7 @@ from .Punctuation import Punctuation
 class Input:
 
 	source      : frozenset[pathlib.Path]
-	encoding    : str
+	encoding    : frozenset[str]
 	letters     : frozenset[str]          = frozenset('йцукенгшщзхфывапролджэячсмитьбюъё')
 	punctuation : Punctuation             = Punctuation(middle = frozenset('-—'), end = frozenset('.!?'))
 
@@ -21,24 +21,33 @@ class Input:
 
 			word = ''
 
-			with p.open('r', encoding = self.encoding) as f:
+			for e in self.encoding:
 
-				while _c := f.read(1):
+				try:
 
-					c = _c.lower()
+					with p.open('r', encoding = e) as f:
 
-					if c in self.letters:
-						word += c
-						continue
+						while _c := f.read(1):
 
-					if word:
-						yield Token(word, p)
-						word = ''
+							c = _c.lower()
 
-					if c in self.punctuation.middle:
-						yield Token(c, p)
-					elif c in self.punctuation.end:
-						yield Token(c, p)
-						yield None
+							if c in self.letters:
+								word += c
+								continue
+
+							if word:
+								yield Token(word, p)
+								word = ''
+
+							if c in self.punctuation.middle:
+								yield Token(c, p)
+							elif c in self.punctuation.end:
+								yield Token(c, p)
+								yield None
+
+					break
+
+				except Exception:
+					continue
 
 			yield None
