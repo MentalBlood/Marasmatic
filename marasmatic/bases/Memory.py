@@ -24,12 +24,28 @@ class Memory(Base, dict[Token, set[Token]]):
 
 		return self
 
+	def random(self, sequence: tuple[Token], current: Token | None):
+		if current is None:
+			return random.choice(sequence)
+		else:
+			other = tuple(
+				e
+				for e in sequence
+				if e.path != current.path
+			)
+			if not other:
+				return random.choice(sequence)
+			else:
+				while (result := random.choice(sequence)).path == current.path:
+					continue
+				return result
+
 	def next(self, current: Token | None) -> Token:
 
 		try:
 			if current is not None:
-				return random.choice((*self[current],))
+				return self.random((*self[current],), current)
 		except Exception:
 			pass
 
-		return random.choice((*self.keys(),))
+		return self.random((*self.keys(),), current)
