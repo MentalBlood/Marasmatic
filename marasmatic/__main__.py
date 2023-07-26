@@ -64,7 +64,7 @@ def bot(input: tuple[pathlib.Path], encoding: tuple[str], length: int, token: st
 				site   = site,
 				source = [
 					*itertools.islice(
-						base,
+						base.stream,
 						length
 					)
 				]
