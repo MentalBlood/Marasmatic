@@ -3,7 +3,7 @@ import pathlib
 import datetime
 import itertools
 
-from .bot   import Bot, Repeater
+from .bot   import Bot, Repeater, Message
 
 from .      import bases
 from .Input import Input
@@ -21,28 +21,30 @@ def cli():
 @click.option('--encoding', required = True, type = str,                    default  = ('utf8',),                   help = 'Input files encoding', multiple = True)
 def generate(input: tuple[pathlib.Path], encoding: tuple[str], length: int):
 	print(
-		' '.join(
-			e.value
-			for e in itertools.islice(
-				bases.Memory(
-					Input(
-						source   = frozenset(input),
-						encoding = frozenset(encoding)
-					)
-				).stream,
-				length
-			)
-		)
+		Message(
+			site   = None,
+			source = [
+				*itertools.islice(
+					bases.Memory(
+						Input(
+							source   = frozenset(input),
+							encoding = frozenset(encoding)
+						)
+					).stream,
+					length
+				)
+			]
+		).content
 	)
 
 
 @cli.command(name = 'bot')
-@click.option('--length',   required = True,  type = click.IntRange(min = 1), default = 30,     show_default = True, help = 'Length of text to generate')
+@click.option('--length',   required = True,  type = click.IntRange(min = 1), default = 30,        show_default = True, help = 'Length of text to generate')
 @click.argument("input",    required = True,  type = pathlib.Path,            nargs = -1)
-@click.option('--token',    required = True,  type = str,                                                            help = 'Telegram bot token')
-@click.option('--interval', required = True,  type = click.IntRange(min = 1), default = 30,     show_default = True, help = 'Interval between posts, in seconds')
-@click.option('--chat',     required = True,  type = str,                                                            help = 'Telegram chat id')
-@click.option('--site',     required = False, type = str,                                                            help = 'Site to join file paths to get links with')
+@click.option('--token',    required = True,  type = str,                                                               help = 'Telegram bot token')
+@click.option('--interval', required = True,  type = click.IntRange(min = 1), default = 30,        show_default = True, help = 'Interval between posts, in seconds')
+@click.option('--chat',     required = True,  type = str,                                                               help = 'Telegram chat id')
+@click.option('--site',     required = False, type = str,                                                               help = 'Site to join file paths to get links with')
 @click.option('--encoding', required = True,  type = str,                     default = ('utf8',),                      help = 'Input files encoding', multiple = True)
 def bot(input: tuple[pathlib.Path], encoding: tuple[str], length: int, token: str, chat: str, interval: int, site: str):
 
@@ -58,17 +60,14 @@ def bot(input: tuple[pathlib.Path], encoding: tuple[str], length: int, token: st
 			token = token,
 			chat  = chat
 		).send(
-			' '.join(
-
-				     f"<a href='{site}{e.path.stem.replace('___', '/')}.html'>{e.value}</a>"
-				if   site
-				else e.value
-
-				for e in itertools.islice(
-					base.stream,
-					length
-				)
-
+			Message(
+				site   = site,
+				source = [
+					*itertools.islice(
+						base,
+						length
+					)
+				]
 			)
 		),
 		interval = datetime.timedelta(seconds = interval)

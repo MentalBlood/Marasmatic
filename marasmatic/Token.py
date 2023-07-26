@@ -10,6 +10,9 @@ class Token:
 	value : str
 	path  : pathlib.Path
 
+	def link(self, site: str):
+		return f"{site}{self.path.stem.replace('___', '/')}.html"
+
 	def __hash__(self):
 		return hash(self.value)
 
