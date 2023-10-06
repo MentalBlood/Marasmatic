@@ -24,7 +24,7 @@ class Memory(Base, dict[Token, set[Token]]):
 
 		return self
 
-	def random(self, sequence: tuple[Token], current: Token | None):
+	def random(self, sequence: typing.Sequence[Token], current: Token | None):
 		if current is None:
 			return random.choice(sequence)
 		else:

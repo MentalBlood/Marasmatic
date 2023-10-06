@@ -10,7 +10,8 @@ from .. import marasmatic
 def base():
 	return marasmatic.bases.Memory(
 		source = marasmatic.Input(
-			source = frozenset(pathlib.Path('trash/songs').glob('*.txt')),
+			source   = frozenset(pathlib.Path('trash/songs').glob('*.txt')),
+			encoding = frozenset('utf8')
 		)
 	)
 
