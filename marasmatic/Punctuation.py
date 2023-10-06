@@ -1,8 +1,8 @@
-import pydantic
+import dataclasses
 
 
 
-@pydantic.dataclasses.dataclass(frozen = True, kw_only = True)
+@dataclasses.dataclass(frozen = True, kw_only = True)
 class Punctuation:
 
 	middle : frozenset[str]

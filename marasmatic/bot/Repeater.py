@@ -1,11 +1,11 @@
 import time
 import typing
-import pydantic
 import datetime
+import dataclasses
 
 
 
-@pydantic.dataclasses.dataclass(frozen = True, kw_only = True)
+@dataclasses.dataclass(frozen = True, kw_only = True)
 class Repeater:
 
 	f        : typing.Callable[[], None]

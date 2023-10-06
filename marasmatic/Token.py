@@ -1,10 +1,10 @@
 import typing
 import pathlib
-import pydantic
+import dataclasses
 
 
 
-@pydantic.dataclasses.dataclass(frozen = True, kw_only = False)
+@dataclasses.dataclass(frozen = True, kw_only = False)
 class Token:
 
 	value : str

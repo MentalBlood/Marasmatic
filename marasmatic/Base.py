@@ -1,7 +1,7 @@
 import abc
 import typing
-import pydantic
 import itertools
+import dataclasses
 
 from .Pair    import Pair
 from .Input   import Input
@@ -9,7 +9,7 @@ from .Token   import Token
 
 
 
-@pydantic.dataclasses.dataclass(frozen = True, kw_only = False)
+@dataclasses.dataclass(frozen = True, kw_only = False)
 class Base(metaclass = abc.ABCMeta):
 
 	source : Input | None = None

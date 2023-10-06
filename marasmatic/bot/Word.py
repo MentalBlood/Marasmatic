@@ -1,8 +1,8 @@
-import pydantic
+import dataclasses
 
 
 
-@pydantic.dataclasses.dataclass(frozen = True, kw_only = False)
+@dataclasses.dataclass(frozen = True, kw_only = False)
 class Word:
 
 	value : str

@@ -1,7 +1,7 @@
 import random
 import typing
 import pathlib
-import pydantic
+import dataclasses
 
 from ..Pair    import Pair
 from ..Base    import Base
@@ -9,7 +9,7 @@ from ..Token   import Token
 
 
 
-@pydantic.dataclasses.dataclass(frozen = True, kw_only = True)
+@dataclasses.dataclass(frozen = True, kw_only = True)
 class Dir(Base):
 
 	root : pathlib.Path

@@ -1,12 +1,12 @@
 import time
-import pydantic
 import requests
+import dataclasses
 
 from .Message import Message
 
 
 
-@pydantic.dataclasses.dataclass(frozen = True, kw_only = True)
+@dataclasses.dataclass(frozen = True, kw_only = True)
 class Bot:
 
 	token : str

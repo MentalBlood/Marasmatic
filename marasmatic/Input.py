@@ -1,12 +1,12 @@
 import pathlib
-import pydantic
+import dataclasses
 
 from .Token       import Token
 from .Punctuation import Punctuation
 
 
 
-@pydantic.dataclasses.dataclass(frozen = True, kw_only = True)
+@dataclasses.dataclass(frozen = True, kw_only = True)
 class Input:
 
 	source      : frozenset[pathlib.Path]

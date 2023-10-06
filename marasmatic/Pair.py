@@ -1,10 +1,10 @@
-import pydantic
+import dataclasses
 
 from .Token import Token
 
 
 
-@pydantic.dataclasses.dataclass(frozen = True, kw_only = False)
+@dataclasses.dataclass(frozen = True, kw_only = False)
 class Pair:
 
 	previous : Token | None

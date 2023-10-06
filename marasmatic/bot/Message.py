@@ -1,5 +1,5 @@
 import typing
-import pydantic
+import dataclasses
 
 from ..Token import Token
 
@@ -8,7 +8,7 @@ from .Style import Style
 
 
 
-@pydantic.dataclasses.dataclass(frozen = True, kw_only = True)
+@dataclasses.dataclass(frozen = True, kw_only = True)
 class Message:
 
 	source : str | typing.Sequence[Token]
