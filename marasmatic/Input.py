@@ -10,9 +10,7 @@ class Input:
     source: frozenset[pathlib.Path]
     encoding: frozenset[str]
     letters: frozenset[str] = frozenset("йцукенгшщзхфывапролджэячсмитьбюъё")
-    punctuation: Punctuation = Punctuation(
-        middle=frozenset("-—"), end=frozenset[str](".!?")
-    )
+    punctuation: Punctuation = Punctuation(middle=frozenset("-—"), end=frozenset[str](".!?"))
 
     @property
     def stream(self):

@@ -37,9 +37,7 @@ class Message:
                             if previous.path != token.path:
                                 style = (style + 1) % len(self.styles)
 
-                        result.append(
-                            self.styles[style](token, token.link(self.site)).value
-                        )
+                        result.append(self.styles[style](token, token.link(self.site)).value)
                         previous = token
 
                     return " ".join(result)

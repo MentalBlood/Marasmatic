@@ -1,10 +1,10 @@
 import abc
-import typing
-import itertools
 import dataclasses
+import itertools
+import typing
 
-from .Pair import Pair
 from .Input import Input
+from .Pair import Pair
 from .Token import Token
 
 

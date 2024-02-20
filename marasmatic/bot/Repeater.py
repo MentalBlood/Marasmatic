@@ -17,9 +17,4 @@ class Repeater:
             self.f()
             launched += 1
 
-            time.sleep(
-                (
-                    self.interval
-                    - (datetime.datetime.now() - start - self.interval * launched)
-                ).seconds
-            )
+            time.sleep((self.interval - (datetime.datetime.now() - start - self.interval * launched)).seconds)
