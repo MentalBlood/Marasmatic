@@ -4,29 +4,22 @@ import datetime
 import dataclasses
 
 
-
-@dataclasses.dataclass(frozen = True, kw_only = True)
+@dataclasses.dataclass(frozen=True, kw_only=True)
 class Repeater:
+    f: typing.Callable[[], None]
+    interval: datetime.timedelta
 
-	f        : typing.Callable[[], None]
-	interval : datetime.timedelta
+    def __call__(self):
+        start = datetime.datetime.now()
+        launched = 0
 
-	def __call__(self):
+        while True:
+            self.f()
+            launched += 1
 
-		start    = datetime.datetime.now()
-		launched = 0
-
-		while True:
-
-			self.f()
-			launched += 1
-
-			time.sleep(
-				(
-					self.interval -
-					(
-						datetime.datetime.now() - start -
-						self.interval * launched
-					)
-				).seconds
-			)
+            time.sleep(
+                (
+                    self.interval
+                    - (datetime.datetime.now() - start - self.interval * launched)
+                ).seconds
+            )
